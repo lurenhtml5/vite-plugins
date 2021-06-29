@@ -1,6 +1,6 @@
 ### vite插件机制
 
-#### 约定
+#### 命名约定
 
 如果插件不使用 Vite 特有的钩子，可以实现为 [兼容的 Rollup 插件](https://cn.vitejs.dev/guide/api-plugin.html#Rollup-插件兼容性)，推荐使用 [Rollup 插件名称约定](https://rollupjs.org/guide/en/#conventions)。
 
@@ -107,17 +107,17 @@ export default function myPlugin() {
 
 在开发中，Vite 开发服务器会创建一个插件容器来调用 [Rollup 构建钩子](https://rollupjs.org/guide/en/#build-hooks)，与 Rollup 如出一辙。
 
-##### 以下🐶在服务器启动时被调用
+##### 以下钩子在服务器启动时被调用
 
 - `options`
 - `buildStart`
 
 ###### options
 
-类型: Function
-形式: ( inputOptions ) => options
+- Type: ( inputOptions ) => options
 
-rollup打包的第一个🐶，在rollup完全配置完成之前，用来替换或者操作rollup的配置，返回null，表示不做任何操作，如果简单的只是为了读rollup的配置文件，那么可以在`buildStart`这个🐶里面去获取；同时，它是rollup所有🐶里唯一一个无法获取 [plugin context](https://rollupjs.org/guide/en/#plugin-context) 的🐶，这个🐶应该一般很少用到。
+
+rollup打包的第一个钩子，在rollup完全配置完成之前，用来替换或者操作rollup的配置，返回null，表示不做任何操作，如果简单的只是为了读rollup的配置文件，那么可以在`buildStart`这个钩子里面去获取；同时，它是rollup所有钩子里唯一一个无法获取 [plugin context](https://rollupjs.org/guide/en/#plugin-context) 的钩子，这个钩子应该一般很少用到。
 
 ###### buildStart
 
@@ -125,9 +125,9 @@ rollup打包的第一个🐶，在rollup完全配置完成之前，用来替换�
 - Previous Hook: [`options`](https://rollupjs.org/guide/en/#options)
 - Next Hook: [`resolveId`](https://rollupjs.org/guide/en/#resolveid)
 
-跟在options🐶后面，在rollup构建时候触发，主要用来获取rollup的配置
+跟在options钩子后面，在rollup构建时候触发，主要用来获取rollup的配置
 
-##### 以下🐶会在每个模块请求时调用
+##### 以下钩子会在每个模块请求时调用
 
 ###### resolveId
 
@@ -135,9 +135,7 @@ rollup打包的第一个🐶，在rollup完全配置完成之前，用来替换�
 - Previous Hook: [`buildStart`](https://rollupjs.org/guide/en/#buildstart)、[`moduleParsed`](https://rollupjs.org/guide/en/#moduleparsed)、[`resolveDynamicImport`](https://rollupjs.org/guide/en/#resolvedynamicimport).
 - Next Hook: [`load`](https://rollupjs.org/guide/en/#load)
 
-如果配置了[`buildStart`](https://rollupjs.org/guide/en/#buildstart)、[`moduleParsed`](https://rollupjs.org/guide/en/#moduleparsed)、[`resolveDynamicImport`](https://rollupjs.org/guide/en/#resolvedynamicimport)、那么resolveId这个🐶会跟在前面三个🐶后面依次触发；需要说明一下，[`moduleParsed`](https://rollupjs.org/guide/en/#moduleparsed)和[`resolveDynamicImport`](https://rollupjs.org/guide/en/#resolvedynamicimport)这两个🐶在rollup的serve(开发模式)下并不会用到。在某个插件触发[`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfileemittedfile-emittedchunk--emittedasset--string)
-
-或者[`this.resolve`](https://rollupjs.org/guide/en/#thisresolvesource-string-importer-string-options-skipself-boolean-custom-plugin-string-any--promiseid-string-external-boolean--absolute-modulesideeffects-boolean--no-treeshake-syntheticnamedexports-boolean--string-meta-plugin-string-any--null) 手动resolve一个id的时候，就会触发resolveId🐶；返回null，表示采用默认的解析方式；返回false，表示importee被作为外部模块，不会打包进bundle。
+如果配置了[`buildStart`](https://rollupjs.org/guide/en/#buildstart)、[`moduleParsed`](https://rollupjs.org/guide/en/#moduleparsed)、[`resolveDynamicImport`](https://rollupjs.org/guide/en/#resolvedynamicimport)、那么resolveId钩子会跟在前面三个钩子后面依次触发；需要说明一下，[`moduleParsed`](https://rollupjs.org/guide/en/#moduleparsed)和[`resolveDynamicImport`](https://rollupjs.org/guide/en/#resolvedynamicimport)这两个钩子在rollup的serve(开发模式)下并不会用到。在某个插件触发[`this.emitFile`](https://rollupjs.org/guide/en/#thisemitfileemittedfile-emittedchunk--emittedasset--string)或者[`this.resolve`](https://rollupjs.org/guide/en/#thisresolvesource-string-importer-string-options-skipself-boolean-custom-plugin-string-any--promiseid-string-external-boolean--absolute-modulesideeffects-boolean--no-treeshake-syntheticnamedexports-boolean--string-meta-plugin-string-any--null) 手动resolve一个id的时候，就会触发resolveId钩子；返回null，表示采用默认的解析方式；返回false，表示importee被作为外部模块，不会打包进bundle。
 
 ```javascript
 async resolveId(importee,importer) {
@@ -179,7 +177,7 @@ load(id) {
 
 用来针对load之后的chunk做转换，避免额外的编译开销
 
-##### 以下🐶在服务器关闭时被调用
+##### 以下钩子在服务器关闭时被调用
 
 - [`buildEnd`](https://rollupjs.org/guide/en/#buildend)
 - [`closeBundle`](https://rollupjs.org/guide/en/#closebundle)
@@ -190,7 +188,7 @@ load(id) {
 - Previous Hook: [`moduleParsed`](https://rollupjs.org/guide/en/#moduleparsed), [`resolveId`](https://rollupjs.org/guide/en/#resolveid) or [`resolveDynamicImport`](https://rollupjs.org/guide/en/#resolvedynamicimport).
 - Next Hook: [`outputOptions`](https://rollupjs.org/guide/en/#outputoptions) in the output generation phase as this is the last hook of the build phase.
 
-在bunding finished的时候、写文件之前触发，也可以返回Promise；如果在build过程中报错，也会触发这个🐶
+在bunding finished的时候、写文件之前触发，也可以返回Promise；如果在build过程中报错，也会触发这个钩子
 
 #### vite独有的钩子
 
@@ -441,6 +439,8 @@ transform
 
 #### 插件执行顺序
 
+和webpack有点类似，也是通过enforce字段控制
+
 - 别名处理Alias
 - 用户插件设置`enforce: 'pre'`
 - Vite核心插件
@@ -451,3 +451,12 @@ transform
 
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bf65b1e604df4ff6903081128ee4e591~tplv-k3u1fbpfcp-zoom-1.image)
 
+由于公司后续架构升级会用到vue3+vite，考虑到vite暂时可能还有些轮子不够健全，不排除后续工作需要自己写vite插件，所以在此稍做总结，不对的地方还望指正。
+
+参考链接：
+
+https://github.com/lurenhtml5/vite-plugins
+
+https://cn.vitejs.dev/guide/api-plugin.html
+
+https://rollupjs.org/guide/en/#plugin-development
