@@ -437,7 +437,7 @@ transform
 
 钩子执行顺序
 
-![https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e229d9ff7880440bafcc5f188486defc~tplv-k3u1fbpfcp-zoom-1.image]()
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e229d9ff7880440bafcc5f188486defc~tplv-k3u1fbpfcp-zoom-1.image)
 
 #### 插件执行顺序
 
@@ -449,5 +449,5 @@ transform
 - 用户插件设置`enforce: 'post'`
 - Vite构建后置插件(minify, manifest, reporting)
 
-![https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bf65b1e604df4ff6903081128ee4e591~tplv-k3u1fbpfcp-zoom-1.image]()
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bf65b1e604df4ff6903081128ee4e591~tplv-k3u1fbpfcp-zoom-1.image)
 
