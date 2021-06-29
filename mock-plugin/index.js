@@ -18,6 +18,17 @@ const createRoute = function (mockList) {
     })
 }
 
+const send = function (body) {
+    let chunk = JSON.stringify(body)
+    if (chunk) {
+        chunk = Buffer.from(chunk, 'utf-8')
+        this.setHeader('Content-type', chunk.length)
+    }
+    this.setHeader('Content-type', 'application/json')
+    this.statusCode = 200
+    this.end(chunk, 'utf8')
+}
+
 // 默认导出函数
 export default function (options) {
     options.entry = options.entry || './data.js'
